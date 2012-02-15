@@ -1,0 +1,8 @@
+STATUS MONITOR
+--------------
+
+This is a simple status monitor designed to report on the status of URLs provided in the JSON file './datafiles/monitoringurls.json'. An example JSON file is provided './datafiles/example.json'.
+
+The status monitor is designed to overlay the pt_stats project, hosted on Heroku. The underlying page is displayed in an iframe, and its URL needs to be configured in monitor.html.
+
+Due to cross domain issues, this app must be run locally via the file:// protocol in Safari (ie. just open it from the hard drive).

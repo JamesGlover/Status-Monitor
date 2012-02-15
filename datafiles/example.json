@@ -1,0 +1,18 @@
+{"monitorGroups": 
+[
+	{	"groupName": "A group",
+		"monitoringUrls":
+		[
+			{"url": "http://www.example.com",	"name": "Example"},
+			{"url": "http://www.example.com/2",	"name": "Another example"}
+		]
+	},
+	{	"groupName": "B Group",
+		"monitoringUrls": 
+		[
+			{"url": "https://www.example.com/3",	"name": "A final example"}
+	    ]
+	}
+
+]
+}

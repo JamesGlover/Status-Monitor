@@ -1,0 +1,140 @@
+* {margin:0; padding:0; font-family:helvetica, arial, sans-serif; list-style:none;}
+
+#monitor_all li { /* Default font size small */
+  font-size:small;
+}
+.monitor_group { /* The monitor categories */
+  background-color: #D5D5D5;
+  margin: 5px 0;
+  border-top-right-radius:10px; -webkit-border-top-right-radius:10px;
+  border-bottom-right-radius:10px; -webkit-border-bottom-right-radius:10px;
+  padding:0 5px 0 20px;
+  width:24px;
+  overflow: visible;
+  position:relative;
+  min-height:150px;
+}
+
+.group_name { /* Monitor category labels */
+  -webkit-transform:rotate(270deg);
+  -webkit-transform-origin: right top;
+  position:absolute;
+  top:0;
+  right: 100%;
+  white-space: nowrap;
+  margin: 3px 0 3px -5px;
+  padding:3px;
+}
+
+.monitor_group .group_list > li { /* Monitors: Colour stylings neutral for before first result retrieved */
+ width: 20px; height:20px; border-radius:10px; -webkit-border-radius:10px; margin:2px;
+ float:left; clear:left;
+ background: #e2e2e2; /* Old browsers */
+ background: -moz-linear-gradient(top, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6+ */
+ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(50%,#dbdbdb), color-stop(51%,#d1d1d1), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
+ background: -webkit-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10+,Safari5.1+ */
+ background: -o-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Opera 11.10+ */
+ background: -ms-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* IE10+ */
+ background: linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C */
+}
+#monitor_all .monitor_group .success { /* Green lights for okay services */
+  background: #bfd255; /* Old browsers */
+  background: -moz-linear-gradient(top,  #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bfd255), color-stop(50%,#8eb92a), color-stop(51%,#72aa00), color-stop(100%,#9ecb2d)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* IE10+ */
+  background: linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* W3C */
+  }
+  
+#monitor_all .monitor_group li.fail, #monitor_all .monitor_group li.timeout, #monitor_all .monitor_group li.caution { /* Txt should be readable */
+    font-size: large;
+}
+#monitor_all .monitor_group .fail {  /* Red lights for fail */
+  background: #f3c5bd; /* Old browsers */
+  background: -moz-linear-gradient(top, #f3c5bd 0%, #e86c57 50%, #ea2803 51%, #ff6600 75%, #c72200 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3c5bd), color-stop(50%,#e86c57), color-stop(51%,#ea2803), color-stop(75%,#ff6600), color-stop(100%,#c72200)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* IE10+ */
+  background: linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* W3C */
+ }
+ 
+#monitor_all .monitor_group .timeout { /* Orange lights for timeout */
+  background: #ffb76b; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffb76b 0%, #ffa73d 50%, #ff7c00 51%, #ff7f04 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffb76b), color-stop(50%,#ffa73d), color-stop(51%,#ff7c00), color-stop(100%,#ff7f04)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* IE10+ */
+  background: linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* W3C */
+  }
+#monitor_all .monitor_group .caution { /* Yellow lights for cautions */
+  background: #f0efa4; /* Old browsers */
+  background: -moz-linear-gradient(top, #f0efa4 0%, #e6e038 50%, #d9d325 51%, #f0ea44 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0efa4), color-stop(50%,#e6e038), color-stop(51%,#d9d325), color-stop(100%,#f0ea44)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* IE10+ */
+  background: linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* W3C */
+}
+
+.monitor_group li.raise { /* Expand 'raised' monitors */
+ width: auto; height:auto; border-radius:10px; -webkit-border-radius:10px; margin:2px;
+ padding: 10px;
+}
+
+li span.name, li span.status, .history { /* Hide text when not raised */
+  display:none;
+}
+li.raise span.name, li.raise span.status { /* Display raised text */
+  display:inline;
+  white-space: nowrap;
+}
+
+
+#project_stats { /* The stats page (on heroku, in an iframe) */
+  border:0;
+  width: 90%; /* Set width to 80 to avoid excessive overlap) */
+  height: 100%;
+  float:right;
+}
+
+#monitor_all { /* Positions the monitors in general */
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+.status { /* Colours the status text */
+  color: white;
+  font-size: normal;
+  padding-left: 30px;
+}
+
+.caution .status { /* Adjusts status text on light backgrounds */
+  color: #414141;
+}
+
+/* The History */
+.raise ul.history {
+  display: block;
+  float: right;
+  background: transparent;
+}
+
+ul.history li {
+  display:inline; float:left;
+  background:none !important;
+  font-size:10pt !important;
+  color: gray;
+}
+ul.history li.success {
+  color: green;
+}
+ul.history li.fail {
+  color: red;
+}
+ul.history li.timeout {
+  color: orange;
+}

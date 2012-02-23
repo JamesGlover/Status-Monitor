@@ -27,61 +27,31 @@
 }
 
 .monitor_group .group_list > li { /* Monitors: Colour stylings neutral for before first result retrieved */
- width: 20px; height:20px; border-radius:10px; -webkit-border-radius:10px; margin:2px;
+ width: 10px; height:10px; border-radius:5px; -webkit-border-radius:5px; margin:2px;
  float:left; clear:left;
- background: #e2e2e2; /* Old browsers */
- background: -moz-linear-gradient(top, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6+ */
- background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(50%,#dbdbdb), color-stop(51%,#d1d1d1), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
- background: -webkit-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10+,Safari5.1+ */
- background: -o-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Opera 11.10+ */
- background: -ms-linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* IE10+ */
- background: linear-gradient(top, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C */
+ background: #e2e2e2;
 }
 #monitor_all .monitor_group .success { /* Green lights for okay services */
-  background: #bfd255; /* Old browsers */
-  background: -moz-linear-gradient(top,  #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bfd255), color-stop(50%,#8eb92a), color-stop(51%,#72aa00), color-stop(100%,#9ecb2d)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* IE10+ */
-  background: linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* W3C */
+  background: #bfd255;
   }
   
 #monitor_all .monitor_group li.fail, #monitor_all .monitor_group li.timeout, #monitor_all .monitor_group li.caution { /* Txt should be readable */
     font-size: large;
 }
 #monitor_all .monitor_group .fail {  /* Red lights for fail */
-  background: #f3c5bd; /* Old browsers */
-  background: -moz-linear-gradient(top, #f3c5bd 0%, #e86c57 50%, #ea2803 51%, #ff6600 75%, #c72200 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3c5bd), color-stop(50%,#e86c57), color-stop(51%,#ea2803), color-stop(75%,#ff6600), color-stop(100%,#c72200)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* IE10+ */
-  background: linear-gradient(top, #f3c5bd 0%,#e86c57 50%,#ea2803 51%,#ff6600 75%,#c72200 100%); /* W3C */
+  background: #f3c5bd;
  }
  
 #monitor_all .monitor_group .timeout { /* Orange lights for timeout */
-  background: #ffb76b; /* Old browsers */
-  background: -moz-linear-gradient(top, #ffb76b 0%, #ffa73d 50%, #ff7c00 51%, #ff7f04 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffb76b), color-stop(50%,#ffa73d), color-stop(51%,#ff7c00), color-stop(100%,#ff7f04)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* IE10+ */
-  background: linear-gradient(top, #ffb76b 0%,#ffa73d 50%,#ff7c00 51%,#ff7f04 100%); /* W3C */
+  background: #ffb76b;
   }
 #monitor_all .monitor_group .caution { /* Yellow lights for cautions */
-  background: #f0efa4; /* Old browsers */
-  background: -moz-linear-gradient(top, #f0efa4 0%, #e6e038 50%, #d9d325 51%, #f0ea44 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0efa4), color-stop(50%,#e6e038), color-stop(51%,#d9d325), color-stop(100%,#f0ea44)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* IE10+ */
-  background: linear-gradient(top, #f0efa4 0%,#e6e038 50%,#d9d325 51%,#f0ea44 100%); /* W3C */
+  background: #f0efa4;
 }
 
 .monitor_group li.raise { /* Expand 'raised' monitors */
- width: auto; height:auto; border-radius:10px; -webkit-border-radius:10px; margin:2px;
- padding: 10px;
+ width: auto; height:auto; border-radius:5px; -webkit-border-radius:5px; margin:2px;
+ padding: 5px;
 }
 
 li span.name, li span.status, .history { /* Hide text when not raised */

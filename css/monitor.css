@@ -27,26 +27,26 @@
 }
 
 .monitor_group .group_list > li { /* Monitors: Colour stylings neutral for before first result retrieved */
- width: 10px; height:10px; border-radius:5px; -webkit-border-radius:5px; margin:2px;
+ width: 16px; height:16px; border-radius:8px; -webkit-border-radius:8px; margin:2px;
  float:left; clear:left;
- background: #e2e2e2;
+ background: #A5A5A5;
 }
 #monitor_all .monitor_group .success { /* Green lights for okay services */
-  background: #bfd255;
+  background: #36C319;
   }
   
 #monitor_all .monitor_group li.fail, #monitor_all .monitor_group li.timeout, #monitor_all .monitor_group li.caution { /* Txt should be readable */
     font-size: large;
 }
 #monitor_all .monitor_group .fail {  /* Red lights for fail */
-  background: #f3c5bd;
+  background: #EE2023;
  }
  
 #monitor_all .monitor_group .timeout { /* Orange lights for timeout */
-  background: #ffb76b;
+  background: #FF8500;
   }
 #monitor_all .monitor_group .caution { /* Yellow lights for cautions */
-  background: #f0efa4;
+  background: #FFF400;
 }
 
 .monitor_group li.raise { /* Expand 'raised' monitors */

@@ -90,7 +90,10 @@ li.raise span.name, li.raise span.status { /* Display raised text */
 .raise ul.history {
   display: block;
   float: right;
-  background: transparent;
+  background: white;
+  padding: 0 2px;
+  margin: 2px -3px -3px -3px;
+  -webkit-border-radius:3px; border-radius:3px; 
 }
 
 ul.history li {
@@ -98,6 +101,7 @@ ul.history li {
   background:none !important;
   font-size:10pt !important;
   color: gray;
+  font-weight: bold;
 }
 ul.history li.success {
   color: green;

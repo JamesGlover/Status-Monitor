@@ -112,3 +112,12 @@ ul.history li.error {
 ul.history li.timeout {
   color: orange;
 }
+.flash {
+  background: white !important;
+  color: black !important;
+  border: 3px solid red;
+  margin: -1px !important;
+}
+.flash .status {
+  color: black !important;
+}

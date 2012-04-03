@@ -3,7 +3,8 @@
 
 (function (jQuery) { //Wrapper
   // Application wide variables
-  var TIMEOUT, UPDATE_INTERVAL, RAISE_TIMEOUTS_AFTER, RAISE_ERRORS_AFTER, CLEAR_CAUTION_AFTER, $;
+  var TIMEOUT, UPDATE_INTERVAL, RAISE_TIMEOUTS_AFTER, RAISE_ERRORS_AFTER,
+  CLEAR_CAUTION_AFTER, URGENT_AFTER, URGENT_TOLERANCE, $;
 
   // CONFIGURATIONS ///////////////////
   // Timings (seconds)
@@ -14,6 +15,8 @@
   RAISE_TIMEOUTS_AFTER = 0; // how many previous timeouts are required before the error is raised
   RAISE_ERRORS_AFTER = 0; // How many previous errors are required before the error is raised
   CLEAR_CAUTION_AFTER = 1; // How many success messages are needed before we return to okay
+  URGENT_AFTER = 10; // How many bad events (in a row) are required before status is elevated
+  URGENT_TOLERANCE = 1; // How many success events can interupt a stream and still have it flagged urgent
 
   $ = jQuery;
 
@@ -102,7 +105,9 @@
     // Adds a status change to the history
     Status.prototype.addHistory = function (status) {
       this.history.data('hist').push(status);
-      while (this.history.data('hist').length > 32) {this.history.data('hist').shift(); }
+      while (this.history.data('hist').length > 32) {
+        this.history.data('hist').shift();
+      }
       amplify.store(this.snakeName('hist'), this.history.data('hist'));
       this.history.children().first().remove();
       this.history.append($(document.createElement('li')).attr("class", 'history_point').text("|").addClass(this.stateToClass(status)));
@@ -152,10 +157,13 @@
       this.statusObject.text(this.state);
     };
 
-    Status.prototype.persist = function (count) {
-      var i;
+    Status.prototype.persist = function (count, tolerance) {
+      var i, j = 0;
+      tolerance = tolerance || 0;
       for (i = 0; (i < count ); i++) {
-        if (this.history.data('hist')[30 - i] === 'success') {return false;  }
+        if (this.history.data('hist')[30 - i] === 'success') {
+          if ( (j += 1) > tolerance) { return false; }
+        }
       }
       return true;
     };
@@ -163,9 +171,35 @@
     Status.prototype.caution = function (count) {
       var i;
       for (i = 0; (i < count ); i++) {
-        if (this.history.data('hist')[30 - i] !== 'success') {return true;  }
+        if (this.history.data('hist')[30 - i] !== 'success') {return true; }
       }
       return false;
+    };
+
+    Status.prototype.checkUrgent = function () {
+      if (this.persist(URGENT_AFTER, URGENT_TOLERANCE)) {
+        this.startUrgent();
+      } else {
+        this.stopUrgent();
+      }
+    };
+
+    Status.prototype.stopUrgent = function () {
+      this.urgent = false;
+      clearInterval(this.urgentTimer);
+      this.coreObject.removeClass('flash');
+    };
+
+    Status.prototype.startUrgent = function () {
+      if (!this.urgent) {
+        var ob = this;
+        this.urgent = true;
+        this.urgentTimer = setInterval(function () { ob.urgentControler(); }, 1000);
+      }
+    };
+
+    Status.prototype.urgentControler = function () {
+      this.coreObject.toggleClass('flash');
     };
 
     Status.prototype.result = function () {
@@ -190,6 +224,7 @@
         }
 
         //ob.raised = persistent;
+        ob.checkUrgent();
         ob.state = ob.stateToClass(status);
         ob.redraw();
       };

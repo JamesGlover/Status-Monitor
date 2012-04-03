@@ -31,14 +31,14 @@
  float:left; clear:left;
  background: #A5A5A5;
 }
-#monitor_all .monitor_group .success { /* Green lights for okay services */
+#monitor_all .monitor_group .okay { /* Green lights for okay services */
   background: #36C319;
   }
   
-#monitor_all .monitor_group li.fail, #monitor_all .monitor_group li.timeout, #monitor_all .monitor_group li.caution { /* Txt should be readable */
+#monitor_all .monitor_group li.error, #monitor_all .monitor_group li.timeout, #monitor_all .monitor_group li.caution { /* Txt should be readable */
     font-size: large;
 }
-#monitor_all .monitor_group .fail {  /* Red lights for fail */
+#monitor_all .monitor_group .error {  /* Red lights for fail */
   background: #EE2023;
  }
  
@@ -103,10 +103,10 @@ ul.history li {
   color: gray;
   font-weight: bold;
 }
-ul.history li.success {
+ul.history li.okay {
   color: green;
 }
-ul.history li.fail {
+ul.history li.error {
   color: red;
 }
 ul.history li.timeout {

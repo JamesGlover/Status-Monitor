@@ -1,4 +1,5 @@
 // Pivotal tracker stats analysis
+/*global amplify, alert, jQuery */
 
 (function (jQuery) { //Wrapper
   // Application wide variables
@@ -18,10 +19,183 @@
 
   $(function () { // jQuery Document Ready
 
-    var namearray = [], monitor = {};
+    var Status, Group, statusarray = [], status_class = {};
+
+    status_class = {// On return of nil, assume 'error'
+      'unknown': 'unknown',
+      'success': 'okay',
+      'okay': 'okay',
+      'abort': 'timeout',
+      'caution':'caution'
+    };
+
+    // STATUS GROUPS ///////////////////////////////
+    Group = function (name) { // The Group prototype
+      this.name = name;
+    };
+
+    Group.prototype.core = function () {
+      if (this.coreObject === undefined) {
+        this.coreObject = $(document.createElement('li')).attr("id", this.snakeName() ).attr("class", "monitor_group");
+        this.coreObject.append($(document.createElement('div')).attr("id", this.snakeName() + '_name').attr("class", 'group_name').text(this.name));
+        this.listObject = $(document.createElement('ul')).attr('class', 'group_list');
+        this.coreObject.append(this.listObject);
+      }
+      return this.coreObject;
+    };
+
+    Group.prototype.list = function () {
+      return this.listObject;
+    };
+
+    Group.prototype.addTo = function (holder) {
+      holder.append(this.core());
+    };
+
+    Group.prototype.snakeName = function () {
+      return this.name.replace(/\s/g, "_");
+    };
+
+    // STATUS OBJECTS /////////////////////////////
+    Status = function (group,url,name) { // The status prototype
+      this.group = group;
+      this.url = url;
+      this.name = name;
+      // And get things going
+      this.render();
+      this.getHistory();
+      this.register();
+    };
+
+    // Initial drawing of the elements of the status object
+    Status.prototype.render = function () {
+      if (this.coreObject === undefined) {
+        this.coreObject = $(document.createElement('li')).attr("id", this.snakeName());
+        this.group.list().append(this.coreObject);
+        this.coreObject.append($(document.createElement('span')).attr("id", this.snakeName('name')).attr("class", 'name').text(this.name));
+        this.statusObject = $(document.createElement('span')).attr("id", this.snakeName('status')).attr("class", 'status');
+        this.coreObject.append(this.statusObject);
+        this.history = $(document.createElement('ul')).attr("id", this.snakeName('history')).attr("class", 'history');
+        this.coreObject.append(this.history);
+      }
+      return this.coreObject;
+    };
+
+    // Get the stored history
+    Status.prototype.getHistory = function () {
+      var l, k, hist_el;
+      this.history.data('hist', amplify.store(this.snakeName('hist')) || []);
+      l = this.history.data('hist').length;
+      while (l < 32) {l = this.history.data('hist').unshift('unknown'); }
+      for (k = 0; k < l; k++) {
+        hist_el = $(document.createElement('li')).attr("class", 'history_point').text("|");
+        hist_el.addClass(this.stateToClass(this.history.data('hist')[k]));
+        this.history.append(hist_el);
+      }
+    };
+
+    // Convert states to css classes / messages
+    Status.prototype.stateToClass = function (state) {
+        return status_class[state] || 'error' ;
+    };
+
+    // Adds a status change to the history
+    Status.prototype.addHistory = function (status) {
+      this.history.data('hist').push(status);
+      while (this.history.data('hist').length > 32) {this.history.data('hist').shift(); }
+      amplify.store(this.snakeName('hist'), this.history.data('hist'));
+      this.history.children().first().remove();
+      this.history.append($(document.createElement('li')).attr("class", 'history_point').text("|").addClass(this.stateToClass(status)));
+    };
+
+    // Converts the name for use in id/data storage
+    Status.prototype.snakeName = function (append) {
+      this.snake_name = this.snake_name || this.name.replace(/\s/g, "_").replace(/[()\/\-]/g, "");
+      if (append === undefined) {
+        append = '';
+      } else {
+        append = '_' + append;
+      }
+      return this.snake_name + append;
+    };
+
+    Status.prototype.request = function () {
+      this.activeRequest = amplify.request({
+        resourceId: this.snakeName(),
+        success: this.result(),
+        error: this.result()
+      });
+      // Once we've sent the request, set up a timeout.
+      // Aborting requests causes them to fail
+      setTimeout(this.timeout(), TIMEOUT * 1000);
+    };
+
+    Status.prototype.timeout = function () {
+      var request = this.activeRequest;
+      return function () {request.abort(); };
+    };
+
+    Status.prototype.register = function () {
+      amplify.request.define(this.snakeName(), "ajax", {
+        url: this.url,
+        type: 'GET'
+      });
+      statusarray.push(this);
+    };
+
+    Status.prototype.redraw = function () {
+      var target = this, status_array = ['error','okay','timeout','caution'], i;
+      this.coreObject.toggleClass( 'raise', this.raised );
+      for (i = 0; i < status_array.length; i += 1) {
+        target.coreObject.toggleClass(status_array[i], (status_array[i] === target.state));
+      }
+      this.statusObject.text(this.state);
+    };
+
+    Status.prototype.persist = function (count) {
+      var i;
+      for (i = 0; (i < count ); i++) {
+        if (this.history.data('hist')[30 - i] === 'success') {return false;  }
+      }
+      return true;
+    };
+
+    Status.prototype.caution = function (count) {
+      var i;
+      for (i = 0; (i < count ); i++) {
+        if (this.history.data('hist')[30 - i] !== 'success') {return true;  }
+      }
+      return false;
+    };
+
+    Status.prototype.result = function () {
+      var ob = this;
+/*jslint unparam: true*/
+      return function (data, status) {/*jslint unparam: false*/
+        ob.addHistory(status);
+        switch (status) {
+
+          case 'success':
+          ob.raised = ob.caution(CLEAR_CAUTION_AFTER);
+          if (ob.raised) { status = 'caution'; }
+          break;
+
+          case 'abort':
+          ob.raised = ob.persist(RAISE_TIMEOUTS_AFTER);
+          break;
+
+          default:
+          ob.raised = ob.persist(RAISE_ERRORS_AFTER);
+          break;
+        }
+
+        //ob.raised = persistent;
+        ob.state = ob.stateToClass(status);
+        ob.redraw();
+      };
+    };
 
     // Browser Check
-
     if ((!$.browser.safari) || window.location.protocol !== 'file:') {
       alert('Due to same-domain policy issues, this page needs to be run in Safari as a local file.');
     }
@@ -29,167 +203,24 @@
     // Define Amplify requests for each JSON value
     $.getJSON('./datafiles/monitoringurls.json', function (data) {
 
-      var holder, i, j, group, glist, snake_name, item, url, name, l, history, k, hist_el;
-      holder = $('#monitor_all');
+      var i, j, group, status;
+
       for (i = 0; i < data.monitorGroups.length; i++) {
-        group = $(document.createElement('li')).attr("id", data.monitorGroups[i].groupName.replace(/\s/g, "_")).attr("class", "monitor_group");
-        holder.append(group);
-        group.append($(document.createElement('div')).attr("id", data.monitorGroups[i].groupName.replace(/\s/g, "_") + '_name').attr("class", 'group_name').text(data.monitorGroups[i].groupName));
-        glist = $(document.createElement('ul')).attr('class', 'group_list');
-        group.append(glist);
+        group = new Group(data.monitorGroups[i].groupName);
+        group.addTo($('#monitor_all'));
+
         for (j = 0; j < data.monitorGroups[i].monitoringUrls.length; j++) {
-          snake_name = data.monitorGroups[i].monitoringUrls[j].name.replace(/\s/g, "_").replace(/[()\/\-]/g, "");
-          item = $(document.createElement('li')).attr("id", snake_name);
-          glist.append(item);
-          item.append($(document.createElement('span')).attr("id", snake_name + '_name').attr("class", 'name').text(data.monitorGroups[i].monitoringUrls[j].name));
-          item.append($(document.createElement('span')).attr("id", snake_name + '_status').attr("class", 'status'));
-          history = $(document.createElement('ul')).attr("id", snake_name + '_history').attr("class", 'history');
-          item.append(history);
-          url = data.monitorGroups[i].monitoringUrls[j].url;
-          name = data.monitorGroups[i].monitoringUrls[j].name;
-          namearray.push(snake_name);
-          item.data('hist', amplify.store(snake_name + '_hist') || []);
-          l = item.data('hist').length;
-          while (l < 32) {l = item.data('hist').unshift('unknown'); }
-          for (k = 0; k < l; k++) {
-            hist_el = $(document.createElement('li')).attr("class", 'history_point').text("|")
-            switch (item.data('hist')[k]) {
-
-            case 'unknown':
-              hist_el.addClass('unknown');
-              break; 
-            case 'success':
-              hist_el.addClass('success');
-              break;
-            case 'abort':
-              hist_el.addClass('timeout');
-              break;
-            default:
-              hist_el.addClass('fail');
-              break;
-              
-            }
-            history.append(hist_el);
-          }
-          amplify.request.define(snake_name, "ajax", {
-            url: url,
-            type: 'GET'
-          });
+          status = new Status(group,data.monitorGroups[i].monitoringUrls[j].url,data.monitorGroups[i].monitoringUrls[j].name);
         }
-        group.append('<div style="clear:both;"></div>'); // Messy hack to clear container. Setting overflow-y:auto doesn't work.
+
+        group.list().append('<div style="clear:both;"></div>'); // Messy hack to clear container. Setting overflow-y:auto doesn't work.
       }
 
-      function in_scope_success(name) {
-        return function (data, status) {
-          var item, caution, i, stat, history;
-          item = $('#' + name);
-          stat = $('#' + name + '_status');
-          history = $('#' + name + '_history');
-          item.data('hist').push(status);
-          while (item.data('hist').length > 32) {item.data('hist').shift(); }
-          amplify.store(name + '_hist', item.data('hist'));
-          caution = false;
-          history.children().first().remove()
-          history.append($(document.createElement('li')).attr("class", 'history_point').text("|").addClass('success'))
-
-          for (i = 0; (i < CLEAR_CAUTION_AFTER && caution === false); i++) {
-            if (item.data('hist')[30 - i] !== 'success') {caution = true; }
-          }
-          if (caution) {
-            item.removeClass('fail');
-            item.removeClass('success');
-            item.removeClass('timeout');
-            item.addClass('caution');
-            item.addClass('raise');
-            stat.text('Caution');
-          } else {
-            item.removeClass('fail');
-            item.addClass('success');
-            item.removeClass('timeout');
-            item.removeClass('caution');
-            item.removeClass('raise');
-            stat.text('Okay');
-          }
-        };
-      }
-
-      function in_scope_fail(name) {
-        return function (data, status) {
-
-          var item, stat, i, persistent, history;
-          item = $('#' + name);
-          stat = $('#' + name + '_status');
-          history = $('#' + name + '_history');
-          item.data('hist').push(status);
-          while (item.data('hist').length > 32) {item.data('hist').shift(); } // Keep 32 in the history
-          amplify.store(name + '_hist', item.data('hist'));
-          switch (status) {
-
-          case 'abort':
-            persistent = true;
-            history.children().first().remove()
-            history.append($(document.createElement('li')).attr("class", 'history_point').text("|").addClass('timeout'))
-            
-            for (i = 0; (i < RAISE_TIMEOUTS_AFTER && persistent === true); i++) {
-              if (item.data('hist')[30 - i] === 'success') {persistent = false; }
-            }
-            item.removeClass('fail');
-            item.removeClass('success');
-            item.addClass('timeout');
-            item.removeClass('caution');
-            if (persistent) {
-              item.addClass('raise');
-            } else {
-              item.removeClass('raise');
-            }
-            stat.text('Timeout');
-            break;
-
-          case 'error':
-          case 'fail':
-          default:
-            persistent = true;
-            history.children().first().remove()
-            history.append($(document.createElement('li')).attr("class", 'history_point').text("|").addClass('fail'))
-            
-            for (i = 0; (i < RAISE_TIMEOUTS_AFTER && persistent === true); i++) {
-              if (item.data('hist')[30 - i] === 'success') {persistent = false; }
-            }
-            item.addClass('fail');
-            item.removeClass('success');
-            item.removeClass('timeout');
-            item.removeClass('caution');
-            if (persistent) {
-              item.addClass('raise');
-            } else {
-              item.removeClass('raise');
-            }
-            stat.text(status);
-            break;
-          }
-        };
-      }
-
-      function timeout(request) {
-        return function () {request.abort(); };
-      }
-
-      // Make requests and update display
+      // Update controller
       function update_state() {
-        var i, request;
-
-        for (i = 0; i < namearray.length; i++) { // For each item
-
-          request = amplify.request({
-            resourceId: namearray[i],
-            success: in_scope_success(namearray[i]),
-            error: in_scope_fail(namearray[i])
-          });
-
-          // Once we've sent the request, set up a timeout.
-          // Aborting requests causes them to fail
-          setTimeout(timeout(request), TIMEOUT * 1000);
-
+        var i;
+        for (i = 0; i < statusarray.length; i++) { // For each item
+          statusarray[i].request();
         }
       }
 
@@ -201,4 +232,4 @@
     // End Document Ready
   });
   //End wrapper
-})(jQuery);
+  }(jQuery));

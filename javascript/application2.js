@@ -86,13 +86,13 @@
 
     // Get the stored history
     Status.prototype.getHistory = function () {
-      var l, k, hist_el;
+      var history_length, i, hist_el;
       this.history.data('hist', amplify.store(this.snakeName('hist')) || []);
-      l = this.history.data('hist').length;
-      while (l < 32) {l = this.history.data('hist').unshift('unknown'); }
-      for (k = 0; k < l; k++) {
+      history_length = this.history.data('hist').length;
+      while (history_length < 32) {history_length = this.history.data('hist').unshift('unknown'); }
+      for (i = 0; i < history_length; i+=1) {
         hist_el = $(document.createElement('li')).attr("class", 'history_point').text("|");
-        hist_el.addClass(this.stateToClass(this.history.data('hist')[k]));
+        hist_el.addClass(this.stateToClass(this.history.data('hist')[i]));
         this.history.append(hist_el);
       }
     };
@@ -160,7 +160,7 @@
     Status.prototype.persist = function (count, tolerance) {
       var i, j = 0;
       tolerance = tolerance || 0;
-      for (i = 0; (i < count ); i++) {
+      for (i = 0; (i < count ); i += 1) {
         if (this.history.data('hist')[30 - i] === 'success') {
           if ( (j += 1) > tolerance) { return false; }
         }
@@ -185,8 +185,8 @@
     };
 
     Status.prototype.stopUrgent = function () {
-      this.urgent = false;
       clearInterval(this.urgentTimer);
+      this.urgent = false;
       this.coreObject.removeClass('flash');
     };
 
